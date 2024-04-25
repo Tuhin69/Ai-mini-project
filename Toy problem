@@ -1,0 +1,27 @@
+import tensorflow as tf
+import numpy as np
+# Create a toy dataset of images
+images = np.random.rand(100, 28, 28, 1)
+# Create labels for the images
+labels = np.random.randint(0, 10, size=(100,))
+# Create a CNN model
+model = tf.keras.Sequential([
+ tf.keras.layers.Conv2D(32, (3, 3), activation='relu', input_shape=(28, 28, 1)),
+ tf.keras.layers.MaxPooling2D((2, 2)),
+ tf.keras.layers.Conv2D(64, (3, 3), activation='relu'),
+ tf.keras.layers.MaxPooling2D((2, 2)),
+ tf.keras.layers.Flatten(),
+ tf.keras.layers.Dense(128, activation='relu'),
+ tf.keras.layers.Dense(10, activation='softmax')
+])
+# Compile the model
+model.compile(
+ optimizer='adam',
+ loss='sparse_categorical_crossentropy',
+ metrics=['accuracy']
+)
+# Train the model
+model.fit(images, labels, epochs=50)
+# Sort the images by their predicted labels
+predicted_labels = model.predict(images)
+sorted_images = [images[i] for i in np.argsort(predicted_labels)]
